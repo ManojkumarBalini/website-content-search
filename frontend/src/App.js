@@ -5,9 +5,6 @@ import SearchResults from './components/SearchResults';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
 
-// Use your Render backend URL
-const API_BASE_URL = 'https://website-content-search-cs5w.onrender.com';
-
 function App() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,7 +16,7 @@ function App() {
     setResults([]);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/search`, {
+      const response = await axios.post('http://localhost:8000/search', {
         url,
         query
       });
