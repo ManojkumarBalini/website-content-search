@@ -1,56 +1,54 @@
 import re
-from collections import Counter
 import math
+from collections import Counter
 
 class VectorSearch:
     def __init__(self):
         pass
     
-    def tf_idf_similarity(self, chunks: list, query: str) -> list:
-        if not chunks:
+    def simple_similarity(self, chunks: list, query: str) -> list:
+        if not chunks or not query:
             return []
         
-        # Tokenize query
         query_terms = set(re.findall(r'\w+', query.lower()))
         
-        # Calculate TF-IDF scores
         results = []
         
-        # Calculate document frequency for IDF
-        doc_freq = Counter()
         for chunk in chunks:
-            chunk_terms = set(re.findall(r'\w+', chunk.lower()))
-            doc_freq.update(chunk_terms)
-        
-        total_docs = len(chunks)
-        
-        for chunk in chunks:
+            if not chunk:
+                continue
+                
             chunk_terms = re.findall(r'\w+', chunk.lower())
+            if not chunk_terms:
+                continue
+            
+            chunk_term_set = set(chunk_terms)
             chunk_term_freq = Counter(chunk_terms)
             
-            similarity = 0
+            # Calculate simple similarity score
+            exact_matches = len(query_terms.intersection(chunk_term_set))
+            
+            # Calculate term frequency score
+            tf_score = 0
             for term in query_terms:
                 if term in chunk_term_freq:
-                    # TF (term frequency in this chunk)
-                    tf = chunk_term_freq[term] / len(chunk_terms)
-                    
-                    # IDF (inverse document frequency)
-                    idf = math.log((total_docs + 1) / (doc_freq[term] + 1)) + 1
-                    
-                    similarity += tf * idf
+                    tf_score += chunk_term_freq[term] / len(chunk_terms)
             
-            # Also consider exact matches and partial matches
-            exact_matches = len(query_terms.intersection(set(chunk_terms)))
-            similarity += exact_matches * 0.5
+            # Combine scores
+            similarity = exact_matches + tf_score
             
+            # Bonus for exact phrase matches
+            if query.lower() in chunk.lower():
+                similarity += 5
+                
             results.append({
                 "content": chunk,
                 "score": similarity
             })
         
-        # Sort by similarity score
+        # Sort by similarity score and return top results
         results.sort(key=lambda x: x["score"], reverse=True)
         return results[:10]
     
     def search_similar(self, chunks: list, query: str, top_k: int = 10) -> list:
-        return self.tf_idf_similarity(chunks, query)
+        return self.simple_similarity(chunks, query)
