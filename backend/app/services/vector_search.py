@@ -1,36 +1,56 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+import re
+from collections import Counter
+import math
 
 class VectorSearch:
     def __init__(self):
         pass
     
-    def search_similar(self, chunks: list, query: str, top_k: int = 10) -> list:
+    def tf_idf_similarity(self, chunks: list, query: str) -> list:
         if not chunks:
             return []
         
-        try:
-            documents = chunks + [query]
-            vectorizer = TfidfVectorizer().fit(documents)
-            vectors = vectorizer.transform(documents)
+        # Tokenize query
+        query_terms = set(re.findall(r'\w+', query.lower()))
+        
+        # Calculate TF-IDF scores
+        results = []
+        
+        # Calculate document frequency for IDF
+        doc_freq = Counter()
+        for chunk in chunks:
+            chunk_terms = set(re.findall(r'\w+', chunk.lower()))
+            doc_freq.update(chunk_terms)
+        
+        total_docs = len(chunks)
+        
+        for chunk in chunks:
+            chunk_terms = re.findall(r'\w+', chunk.lower())
+            chunk_term_freq = Counter(chunk_terms)
             
-            query_vector = vectors[-1]
-            chunk_vectors = vectors[:-1]
+            similarity = 0
+            for term in query_terms:
+                if term in chunk_term_freq:
+                    # TF (term frequency in this chunk)
+                    tf = chunk_term_freq[term] / len(chunk_terms)
+                    
+                    # IDF (inverse document frequency)
+                    idf = math.log((total_docs + 1) / (doc_freq[term] + 1)) + 1
+                    
+                    similarity += tf * idf
             
-            similarities = cosine_similarity(query_vector, chunk_vectors).flatten()
+            # Also consider exact matches and partial matches
+            exact_matches = len(query_terms.intersection(set(chunk_terms)))
+            similarity += exact_matches * 0.5
             
-            scored_chunks = list(zip(chunks, similarities))
-            scored_chunks.sort(key=lambda x: x[1], reverse=True)
-            
-            top_results = scored_chunks[:top_k]
-            
-            return [
-                {
-                    "content": chunk,
-                    "score": float(score)
-                }
-                for chunk, score in top_results
-            ]
-        except Exception as e:
-            print(f"Vector search error: {e}")
-            return []
+            results.append({
+                "content": chunk,
+                "score": similarity
+            })
+        
+        # Sort by similarity score
+        results.sort(key=lambda x: x["score"], reverse=True)
+        return results[:10]
+    
+    def search_similar(self, chunks: list, query: str, top_k: int = 10) -> list:
+        return self.tf_idf_similarity(chunks, query)
