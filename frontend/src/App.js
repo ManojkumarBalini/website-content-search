@@ -5,7 +5,8 @@ import SearchResults from './components/SearchResults';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://website-content-search-cs5w.onrender.com';
+// Use your Render backend URL
+const API_BASE_URL = 'https://website-content-search-cs5w.onrender.com';
 
 function App() {
   const [results, setResults] = useState([]);
