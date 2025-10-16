@@ -8,10 +8,7 @@ app = FastAPI(title="Website Content Search API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://website-content-search-1.onrender.com",
-        "http://localhost:3000"
-    ],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -92,7 +89,3 @@ async def search_website(request: SearchRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
