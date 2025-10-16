@@ -1,49 +1,36 @@
-import re
-import math
-from collections import Counter
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 class VectorSearch:
     def __init__(self):
         pass
     
-    def simple_similarity(self, chunks: list, query: str) -> list:
-        if not chunks or not query:
+    def search_similar(self, chunks: list, query: str, top_k: int = 10) -> list:
+        if not chunks:
             return []
         
-        query_terms = set(re.findall(r'\w+', query.lower()))
-        
-        results = []
-        
-        for chunk in chunks:
-            if not chunk:
-                continue
-                
-            chunk_terms = re.findall(r'\w+', chunk.lower())
-            if not chunk_terms:
-                continue
+        try:
+            documents = chunks + [query]
+            vectorizer = TfidfVectorizer().fit(documents)
+            vectors = vectorizer.transform(documents)
             
-            chunk_term_set = set(chunk_terms)
-            chunk_term_freq = Counter(chunk_terms)
+            query_vector = vectors[-1]
+            chunk_vectors = vectors[:-1]
             
-            exact_matches = len(query_terms.intersection(chunk_term_set))
+            similarities = cosine_similarity(query_vector, chunk_vectors).flatten()
             
-            tf_score = 0
-            for term in query_terms:
-                if term in chunk_term_freq:
-                    tf_score += chunk_term_freq[term] / len(chunk_terms)
+            scored_chunks = list(zip(chunks, similarities))
+            scored_chunks.sort(key=lambda x: x[1], reverse=True)
             
-            similarity = exact_matches + tf_score
+            top_results = scored_chunks[:top_k]
             
-            if query.lower() in chunk.lower():
-                similarity += 5
-                
-            results.append({
-                "content": chunk,
-                "score": min(similarity, 1.0)  # Normalize to 0-1
-            })
-        
-        results.sort(key=lambda x: x["score"], reverse=True)
-        return results[:10]
-    
-    def search_similar(self, chunks: list, query: str, top_k: int = 10) -> list:
-        return self.simple_similarity(chunks, query)
+            return [
+                {
+                    "content": chunk,
+                    "score": float(score)
+                }
+                for chunk, score in top_results
+            ]
+        except Exception as e:
+            print(f"Vector search error: {e}")
+            return []
