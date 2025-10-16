@@ -5,8 +5,7 @@ import SearchResults from './components/SearchResults';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
 
-// Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://website-content-search-cs5w.onrender.com';
 
 function App() {
   const [results, setResults] = useState([]);
