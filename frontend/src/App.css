@@ -1,0 +1,219 @@
+.App {
+    min-height: 100vh;
+  }
+  
+  .app-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+  }
+  
+  .app-header h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+  }
+  
+  .app-header p {
+    color: #666;
+    font-size: 1.2rem;
+  }
+  
+  .search-results {
+    margin-top: 30px;
+  }
+  
+  .search-results h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+  }
+  
+  .result-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .result-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .result-content {
+    margin-bottom: 15px;
+    flex: 1;
+  }
+  
+  .result-content p {
+    color: #555;
+    line-height: 1.6;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .result-content strong {
+    color: #333;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .path {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .match-score {
+    background: #007bff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 80px;
+    text-align: center;
+    margin-left: 15px;
+  }
+  
+  .view-html-btn {
+    background: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .view-html-btn:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-1px);
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .close-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .close-btn:hover {
+    background: #5a6268;
+  }
+  
+  .html-content {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .app-header h1 {
+      font-size: 2rem;
+    }
+    
+    .app-header p {
+      font-size: 1rem;
+    }
+    
+    .result-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    
+    .match-score {
+      align-self: flex-end;
+    }
+    
+    .result-footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    
+    .view-html-btn {
+      align-self: flex-start;
+    }
+    
+    .modal-content {
+      padding: 20px;
+      margin: 20px;
+    }
+  }
