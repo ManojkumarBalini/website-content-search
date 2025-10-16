@@ -5,6 +5,9 @@ import SearchResults from './components/SearchResults';
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
 
+// Use environment variable for API URL, fallback to localhost for development
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
 function App() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,7 +19,7 @@ function App() {
     setResults([]);
 
     try {
-      const response = await axios.post('http://localhost:8000/search', {
+      const response = await axios.post(`${API_BASE_URL}/search`, {
         url,
         query
       });
